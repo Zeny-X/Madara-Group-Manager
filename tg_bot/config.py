@@ -15,7 +15,7 @@ class Config(object):
     OWNER_USERNAME = "@kanashiosukuna"
 
     # RECOMMENDED
-    SQLALCHEMY_DATABASE_URI = 'sqldbtype://username:pw@hostname:port/db_name'  # needed for any database modules
+    SQLALCHEMY_DATABASE_URI = 'postgres://avnadmin:AVNS_0UaeTk3vSmOVOyt4J9r@madara-group-manager-madara-group-manager.l.aivencloud.com:15270/defaultdb?sslmode=require'  # needed for any database modules
     MESSAGE_DUMP = None  # needed to make sure 'save from' messages persist
     LOAD = []
     NO_LOAD = ['translation', 'rss']
@@ -23,16 +23,16 @@ class Config(object):
     URL = None
 
     # OPTIONAL
-    SUDO_USERS = []  # List of ids (not usernames) for users which have sudo access to the bot.
-    SUPPORT_USERS = []  # List of ids (not usernames) for users which are allowed to gban, but can also be banned.
-    WHITELIST_USERS = []  # List of ids (not usernames) for users which WON'T be banned/kicked by the bot.
+    SUDO_USERS = [1935368808]  # List of ids (not usernames) for users which have sudo access to the bot.
+    SUPPORT_USERS = [1935368808]  # List of ids (not usernames) for users which are allowed to gban, but can also be banned.
+    WHITELIST_USERS = [1935368808]  # List of ids (not usernames) for users which WON'T be banned/kicked by the bot.
     DONATION_LINK = None  # EG, paypal
     CERT_PATH = None
     PORT = 5000
     DEL_CMDS = False  # Whether or not you should delete "blue text must click" commands
     STRICT_GBAN = False
     WORKERS = 8  # Number of subthreads to use. This is the recommended amount - see for yourself what works best!
-    BAN_STICKER = 'CAADAgADOwADPPEcAXkko5EB3YGYAg'  # banhammer marie sticker
+    BAN_STICKER = 'CAACAgIAAxkBAAEK1KtlZK-2KbDy1thaeI06-SySV1hpbAACRAADjltCNPp4YQFQ5kJMMwQ'  # banhammer marie sticker
     ALLOW_EXCL = False  # Allow ! commands as well as /
 
 
