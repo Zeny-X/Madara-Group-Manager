@@ -12,7 +12,7 @@ class Config(object):
     # REQUIRED
     API_KEY = "17178129"
     OWNER_ID = "1935368808"  # If you don't know, run the bot and do /id in your private chat with it
-    OWNER_USERNAME = "@kanashiosukuna"
+    OWNER_USERNAME = "kanashiosukuna"
 
     # RECOMMENDED
     SQLALCHEMY_DATABASE_URI = 'postgres://avnadmin:AVNS_0UaeTk3vSmOVOyt4J9r@madara-group-manager-madara-group-manager.l.aivencloud.com:15270/defaultdb?sslmode=require'  # needed for any database modules
