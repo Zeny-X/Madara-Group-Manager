@@ -1,33 +1,33 @@
 import logging
-from Madara import config  # Make sure this matches your directory and config structure
-from Madara.modules import *  # This imports all modules
-from telegram import Update
-from telegram.ext import Updater, CommandHandler, CallbackContext
+from telegram.ext import Updater
+from Madara import config
+
+# Import modules to ensure their handlers are registered
+from Madara.modules import admin, afk, rules, logging as logging_module, warnings, welcome, faq
 
 # Set up logging
-logging.basicConfig(
-    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
-    level=logging.INFO
-)
+logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
+                    level=logging.INFO)
 logger = logging.getLogger(__name__)
 
-# Define a start command handler
-def start(update: Update, context: CallbackContext) -> None:
-    update.message.reply_text('Hello! I am Madara, your group manager bot.')
-
-def main() -> None:
-    # Create the Updater and pass it your bot's token
-    updater = Updater(config.Config.API_KEY)
-
-    # Get the dispatcher to register handlers
+def main():
+    # Initialize the Updater and Dispatcher
+    updater = Updater(token=config.API_KEY, use_context=True)
     dispatcher = updater.dispatcher
 
-    # Register the /start command handler
-    dispatcher.add_handler(CommandHandler("start", start))
+    # Register the modules (if not automatically registered)
+    admin.main()
+    afk.main()
+    rules.main()
+    logging_module.main()
+    warnings.main()
+    welcome.main()
+    faq.main()
 
     # Start the Bot
     updater.start_polling()
-
+    logger.info("Bot started successfully.")
+    
     # Run the bot until you press Ctrl-C or the process receives SIGINT, SIGTERM or SIGABRT
     updater.idle()
 
