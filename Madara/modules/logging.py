@@ -1,37 +1,41 @@
-from telegram import Update
-from telegram.ext import MessageHandler, Filters, CallbackContext
-from Madara import dispatcher
 import logging
+from logging.handlers import RotatingFileHandler
+from telegram import Update
+from telegram.ext import CommandHandler, MessageHandler, Filters, CallbackContext
+from Madara import dispatcher
 
-# Set up the logging configuration
-logging.basicConfig(
-    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
-    level=logging.INFO,
-    handlers=[
-        logging.FileHandler("group_events.log"),
-        logging.StreamHandler()
-    ]
-)
-
+# Set up logging
 logger = logging.getLogger(__name__)
+logger.setLevel(logging.INFO)
+handler = RotatingFileHandler('madara_bot.log', maxBytes=5000000, backupCount=5)
+handler.setFormatter(logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s'))
+logger.addHandler(handler)
 
-def user_joined(update: Update, context: CallbackContext) -> None:
-    for new_member in update.message.new_chat_members:
-        logger.info(f"User {new_member.username} (ID: {new_member.id}) joined the group {update.effective_chat.title} (ID: {update.effective_chat.id}).")
+def start_logging(update: Update, context: CallbackContext) -> None:
+    user = update.effective_user
+    logger.info(f"User {user.id} - {user.first_name} started the bot in chat {update.effective_chat.id}.")
 
-def user_left(update: Update, context: CallbackContext) -> None:
-    user = update.message.left_chat_member
-    logger.info(f"User {user.username} (ID: {user.id}) left the group {update.effective_chat.title} (ID: {update.effective_chat.id}).")
+def log_new_member(update: Update, context: CallbackContext) -> None:
+    for member in update.message.new_chat_members:
+        logger.info(f"New member {member.id} - {member.first_name} joined the chat {update.effective_chat.id}.")
 
-def user_kicked(update: Update, context: CallbackContext) -> None:
-    user = update.message.left_chat_member
-    if user:
-        logger.info(f"User {user.username} (ID: {user.id}) was kicked from the group {update.effective_chat.title} (ID: {update.effective_chat.id}).")
+def log_left_member(update: Update, context: CallbackContext) -> None:
+    member = update.message.left_chat_member
+    logger.info(f"Member {member.id} - {member.first_name} left the chat {update.effective_chat.id}.")
+
+def log_message_deletion(update: Update, context: CallbackContext) -> None:
+    logger.info(f"Message {update.message.message_id} deleted in chat {update.effective_chat.id}.")
+
+def log_command(update: Update, context: CallbackContext) -> None:
+    user = update.effective_user
+    logger.info(f"User {user.id} - {user.first_name} issued command {update.message.text} in chat {update.effective_chat.id}.")
 
 def main():
-    dispatcher.add_handler(MessageHandler(Filters.status_update.new_chat_members, user_joined))
-    dispatcher.add_handler(MessageHandler(Filters.status_update.left_chat_member, user_left))
-    dispatcher.add_handler(MessageHandler(Filters.status_update.kicked_chat_member, user_kicked))
+    dispatcher.add_handler(CommandHandler("start", start_logging))
+    dispatcher.add_handler(MessageHandler(Filters.status_update.new_chat_members, log_new_member))
+    dispatcher.add_handler(MessageHandler(Filters.status_update.left_chat_member, log_left_member))
+    dispatcher.add_handler(MessageHandler(Filters.command, log_command))
+    dispatcher.add_handler(MessageHandler(Filters.text & Filters.update.edited_message, log_message_deletion))
 
 if __name__ == "__main__":
     main()
