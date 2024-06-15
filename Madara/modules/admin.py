@@ -1,6 +1,6 @@
+# Madara/modules/admin.py
 from telegram import Update
 from telegram.ext import CommandHandler, CallbackContext
-from Madara import dispatcher  # Ensure this matches your directory structure
 
 def promote(update: Update, context: CallbackContext) -> None:
     if update.effective_chat.get_member(update.effective_user.id).status != 'administrator':
@@ -40,10 +40,10 @@ def ban(update: Update, context: CallbackContext) -> None:
     except Exception as e:
         update.message.reply_text(f"Failed to ban user: {e}")
 
-def main():
+def main(dispatcher):
     dispatcher.add_handler(CommandHandler("promote", promote, pass_args=True))
     dispatcher.add_handler(CommandHandler("ban", ban, pass_args=True))
 
 if __name__ == "__main__":
-    main()
-  
+    from Madara import dispatcher  # Ensure this matches your directory structure
+    main(dispatcher)
