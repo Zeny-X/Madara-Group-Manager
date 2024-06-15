@@ -1,3 +1,4 @@
+# Madara/__main__.py
 import logging
 from telegram.ext import Updater
 from Madara import config
@@ -16,13 +17,13 @@ def main():
     dispatcher = updater.dispatcher
 
     # Register the modules (if not automatically registered)
-    admin.main()
-    afk.main()
-    rules.main()
-    logging_module.main()
-    warnings.main()
-    welcome.main()
-    faq.main()
+    admin.main(dispatcher)
+    afk.main(dispatcher)
+    rules.main(dispatcher)
+    logging_module.main(dispatcher)
+    warnings.main(dispatcher)
+    welcome.main(dispatcher)
+    faq.main(dispatcher)
 
     # Start the Bot
     updater.start_polling()
